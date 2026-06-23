@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($w = Get-Command winget -ErrorAction SilentlyContinue; if \\($w\\) { \"winget OK: $\\(\\(winget --version\\)\\)\" } else { \"winget NOT found\" })",
+      "PowerShell(winget install OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements --silent)",
+      "PowerShell($env:Path = [System.Environment]::GetEnvironmentVariable\\(\"Path\",\"Machine\"\\) + \";\" + [System.Environment]::GetEnvironmentVariable\\(\"Path\",\"User\"\\); node --version; npm --version)",
+      "Bash(curl -s -m 180 \"http://localhost:8081/index.bundle?platform=android&dev=true&minify=false\" -o bundle_out.js -w \"HTTP %{http_code} | size %{size_download}\\\\n\")",
+      "Bash(curl -s -m 2 \"http://localhost:8081/status\")",
+      "Bash(break)",
+      "Bash(curl -s -m 240 \"http://localhost:8081/index.bundle?platform=android&dev=true&minify=false\" -o bundle_out.js -w \"HTTP %{http_code} | size %{size_download}\\\\n\")",
+      "Bash(python -c \"import json;d=open\\('bundle_out.js',encoding='utf-8'\\).read\\(\\);print\\('ERREUR:', json.loads\\(d\\).get\\('message',''\\)[:500]\\) if d.lstrip\\(\\).startswith\\('{'\\) else print\\('BUNDLE OK -',len\\(d\\),'octets, aucune erreur'\\)\")",
+      "Bash(rm -f bundle_out.js)",
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 8081 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { $c.OwningProcess | Select-Object -Unique | ForEach-Object { try { Stop-Process -Id $_ -Force } catch {} } }; Set-Location \"D:\\\\projet revo\\\\revolut\"; Remove-Item -Force metro.log,metro.err.log -ErrorAction SilentlyContinue; \"ok\")",
+      "mcp__visualize__read_me",
+      "mcp__visualize__show_widget",
+      "Bash(python -c \"import json;d=open\\('bundle_out.js',encoding='utf-8'\\).read\\(\\);print\\('ERREUR:', json.loads\\(d\\).get\\('message',''\\)[:600]\\) if d.lstrip\\(\\).startswith\\('{'\\) else print\\('BUNDLE OK -',len\\(d\\),'octets, aucune erreur'\\)\")",
+      "Bash(npm view *)",
+      "Bash(curl -s -m 240 \"http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false\" -o bundle_out.js -w \"HTTP %{http_code} | size %{size_download}\\\\n\")",
+      "Bash(python -c \"import json;d=open\\('bundle_out.js',encoding='utf-8'\\).read\\(\\);print\\('ERREUR:', json.loads\\(d\\).get\\('message',''\\)[:600]\\) if d.lstrip\\(\\).startswith\\('{'\\) else print\\('BUNDLE iOS OK -',len\\(d\\),'octets, aucune erreur'\\)\")",
+      "Bash(curl -s -m 2 \"http://localhost:8082/status\")",
+      "Bash(curl -s -m 240 \"http://localhost:8082/index.bundle?platform=ios&dev=true&minify=false\" -o b.js -w \"HTTP %{http_code} | size %{size_download}\\\\n\")",
+      "Bash(python -c ' *)",
+      "Bash(rm -f b.js)",
+      "Bash(curl -s -m 200 \"http://localhost:8082/index.bundle?platform=ios&dev=true&minify=false\" -o b.js -w \"HTTP %{http_code} | size %{size_download}\\\\n\")",
+      "Read(//c/Users/pgonn/AppData/Local/Temp/**)",
+      "Bash(grep -iE \"\\\\.\\(png|jpg|jpeg\\)$\")"
+    ]
+  }
+}
