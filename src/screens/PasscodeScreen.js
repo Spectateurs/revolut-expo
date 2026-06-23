@@ -1,16 +1,11 @@
 import { useState, useRef } from 'react';
-import {
-  View,
-  StyleSheet,
-  Pressable,
-  Animated,
-  StatusBar,
-  Image,
-} from 'react-native';
+import { View, StyleSheet, Pressable, Animated, StatusBar, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { BlurView } from 'expo-blur';
 import Text from '../components/AppText';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
+import WarmBackground from '../components/WarmBackground';
+import FaceIdIcon from '../components/FaceIdIcon';
 import { colors } from '../theme';
 import { user } from '../data/accounts';
 
@@ -59,21 +54,8 @@ export default function PasscodeScreen({ navigation }) {
 
   return (
     <View style={styles.root}>
-      {/* Fond noir + reflet chaud (style iOS/Revolut) */}
-      <LinearGradient
-        colors={['#1a1410', '#050505', '#000000', '#241a0f']}
-        locations={[0, 0.32, 0.68, 1]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={StyleSheet.absoluteFill}
-      />
-      {/* Halo chaud sur le bord droit */}
-      <LinearGradient
-        colors={['transparent', 'rgba(150,100,45,0.18)']}
-        start={{ x: 0, y: 0.4 }}
-        end={{ x: 1, y: 0.9 }}
-        style={StyleSheet.absoluteFill}
-      />
+      {/* Même fond chaud que l'accueil → l'effet de flou des bulles est "en raccord" */}
+      <WarmBackground style={StyleSheet.absoluteFill} />
 
       <SafeAreaView style={styles.safe}>
         <StatusBar barStyle="light-content" />
@@ -88,11 +70,7 @@ export default function PasscodeScreen({ navigation }) {
             {Array.from({ length: PIN_LENGTH }).map((_, i) => (
               <View
                 key={i}
-                style={[
-                  styles.dot,
-                  i < pin.length && styles.dotFilled,
-                  error && styles.dotError,
-                ]}
+                style={[styles.dot, i < pin.length && styles.dotFilled, error && styles.dotError]}
               />
             ))}
           </Animated.View>
@@ -100,42 +78,47 @@ export default function PasscodeScreen({ navigation }) {
 
         <View style={styles.keypad}>
           {keys.map((k) => {
+            // Face ID : icône nue (sans bulle), comme iOS
             if (k === 'face') {
               return (
                 <View key={k} style={styles.keyWrap}>
                   <Pressable
-                    style={({ pressed }) => [styles.key, styles.keyGhost, pressed && styles.keyPressed]}
+                    style={({ pressed }) => [styles.bare, pressed && styles.barePressed]}
                     onPress={unlock}
+                    hitSlop={8}
                   >
-                    <MaterialCommunityIcons name="face-recognition" size={34} color="#fff" />
+                    <FaceIdIcon size={36} color="#fff" />
                   </Pressable>
                 </View>
               );
             }
+            // Effacer : icône nue, affichée seulement quand on a commencé à taper
             if (k === 'del') {
-              // Affiché uniquement quand on a commencé à taper (comme iOS)
               return (
                 <View key={k} style={styles.keyWrap}>
                   {pin.length > 0 ? (
                     <Pressable
-                      style={({ pressed }) => [styles.key, styles.keyGhost, pressed && styles.keyPressed]}
+                      style={({ pressed }) => [styles.bare, pressed && styles.barePressed]}
                       onPress={backspace}
+                      hitSlop={8}
                     >
-                      <Ionicons name="backspace-outline" size={30} color="#fff" />
+                      <Ionicons name="backspace-outline" size={29} color="#fff" />
                     </Pressable>
                   ) : (
-                    <View style={styles.key} />
+                    <View style={styles.bare} />
                   )}
                 </View>
               );
             }
+            // Chiffres : bulle en verre dépoli (flou)
             return (
               <View key={k} style={styles.keyWrap}>
-                <Pressable
-                  style={({ pressed }) => [styles.key, styles.keyGhost, pressed && styles.keyPressed]}
-                  onPress={() => press(k)}
-                >
-                  <Text style={styles.keyText}>{k}</Text>
+                <Pressable onPress={() => press(k)}>
+                  {({ pressed }) => (
+                    <BlurView intensity={24} tint="dark" style={[styles.key, pressed && styles.keyPressed]}>
+                      <Text style={styles.keyText}>{k}</Text>
+                    </BlurView>
+                  )}
                 </Pressable>
               </View>
             );
@@ -150,7 +133,7 @@ export default function PasscodeScreen({ navigation }) {
   );
 }
 
-const KEY = 78;
+const KEY = 70;
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: '#000' },
@@ -171,11 +154,11 @@ const styles = StyleSheet.create({
   hello: { color: '#fff', fontSize: 26, fontWeight: '700', marginTop: 22 },
   dots: { flexDirection: 'row', marginTop: 46 },
   dot: {
-    width: 15,
-    height: 15,
-    borderRadius: 8,
+    width: 14,
+    height: 14,
+    borderRadius: 7,
     backgroundColor: 'rgba(255,255,255,0.32)',
-    marginHorizontal: 11,
+    marginHorizontal: 10,
   },
   dotFilled: { backgroundColor: '#fff' },
   dotError: { backgroundColor: colors.red },
@@ -184,23 +167,23 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignSelf: 'center',
-    width: KEY * 3 + 60,
+    width: KEY * 3 + 56,
   },
-  keyWrap: {
-    width: '33.33%',
-    alignItems: 'center',
-    marginVertical: 9,
-  },
+  keyWrap: { width: '33.33%', alignItems: 'center', marginVertical: 9 },
   key: {
     width: KEY,
     height: KEY,
     borderRadius: KEY / 2,
+    overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(255,255,255,0.07)',
   },
-  keyGhost: { backgroundColor: 'rgba(255,255,255,0.06)' },
-  keyPressed: { backgroundColor: 'rgba(255,255,255,0.18)' },
-  keyText: { color: '#fff', fontSize: 34, fontWeight: '400' },
+  keyPressed: { backgroundColor: 'rgba(255,255,255,0.16)' },
+  keyText: { color: '#fff', fontSize: 31, fontWeight: '400' },
+  bare: { width: KEY, height: KEY, borderRadius: KEY / 2, alignItems: 'center', justifyContent: 'center' },
+  barePressed: { backgroundColor: 'rgba(255,255,255,0.08)' },
   forgot: { alignItems: 'center', paddingBottom: 26, paddingTop: 8 },
   forgotText: { color: 'rgba(255,255,255,0.85)', fontSize: 16, fontWeight: '600' },
 });

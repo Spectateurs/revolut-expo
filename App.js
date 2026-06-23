@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import { Text, View } from 'react-native';
+import { View, Easing } from 'react-native';
 import {
   useFonts,
   HankenGrotesk_400Regular,
@@ -14,9 +14,9 @@ import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 
 import { colors } from './src/theme';
+import RevTabBar from './src/components/RevTabBar';
 import SplashScreen from './src/screens/SplashScreen';
 import PasscodeScreen from './src/screens/PasscodeScreen';
 import HomeScreen from './src/screens/HomeScreen';
@@ -31,45 +31,35 @@ import AnalyticsScreen from './src/screens/AnalyticsScreen';
 const RootStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const TAB_ICONS = {
-  Accueil: 'home',
-  Investir: 'trending-up',
-  Virements: 'swap-horizontal',
-  Cryptos: 'logo-bitcoin',
-  RevPoints: 'diamond',
-};
-
 function MainTabs() {
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      tabBar={(props) => <RevTabBar {...props} />}
+      screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.text,
-        tabBarInactiveTintColor: colors.subtext,
-        tabBarStyle: {
-          backgroundColor: colors.bg,
-          borderTopColor: colors.border,
-          height: 62,
-          paddingBottom: 8,
-          paddingTop: 8,
+        // Effet de slide horizontal au changement d'onglet
+        animation: 'shift',
+        transitionSpec: {
+          animation: 'timing',
+          config: { duration: 220, easing: Easing.out(Easing.cubic) },
         },
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
-        tabBarIcon: ({ color, size, focused }) => {
-          // Onglet Accueil : monogramme "R" de Revolut
-          if (route.name === 'Accueil') {
-            return (
-              <Text style={{ color, fontSize: size + 4, fontFamily: 'Aeonik-Bold', letterSpacing: -1 }}>
-                R
-              </Text>
-            );
-          }
-          const base = TAB_ICONS[route.name];
-          // les icônes "logo-*" n'ont pas de variante -outline
-          const hasOutline = base !== 'logo-bitcoin';
-          const name = focused || !hasOutline ? base : `${base}-outline`;
-          return <Ionicons name={name} size={size} color={color} />;
-        },
-      })}
+        sceneStyleInterpolator: ({ current }) => ({
+          sceneStyle: {
+            opacity: current.progress.interpolate({
+              inputRange: [-1, 0, 1],
+              outputRange: [0, 1, 0],
+            }),
+            transform: [
+              {
+                translateX: current.progress.interpolate({
+                  inputRange: [-1, 0, 1],
+                  outputRange: [-90, 0, 90],
+                }),
+              },
+            ],
+          },
+        }),
+      }}
     >
       <Tab.Screen name="Accueil" component={HomeScreen} />
       <Tab.Screen name="Investir" component={InvestScreen} />

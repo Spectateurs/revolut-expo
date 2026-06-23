@@ -37,9 +37,9 @@ export function IconCoins({ size = 18, color = '#fff' }) {
   return <FontAwesome5 name="coins" size={size} color={color} solid />;
 }
 
-// « Cryptos » : bitcoin
+// « Cryptos » : symbole Bitcoin ₿ plein et gras (cf. cryptos.jpg)
 export function IconBitcoin({ size = 22, color = '#fff' }) {
-  return <Ionicons name="logo-bitcoin" size={size} color={color} />;
+  return <MaterialCommunityIcons name="bitcoin" size={size} color={color} />;
 }
 
 // « Lié(s) » : maillons de chaîne

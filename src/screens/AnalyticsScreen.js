@@ -59,9 +59,9 @@ export default function AnalyticsScreen({ navigation }) {
         <View style={styles.depCard}>
           <Text style={styles.cardLabel}>Dépenses</Text>
           <View style={styles.cardValueRow}>
-            <Text style={styles.cardValue}>10 065 €</Text>
+            <Text style={styles.cardValue}>139 938 €</Text>
             <Ionicons name="caret-up" size={13} color={colors.red} />
-            <Text style={[styles.cardDelta, { color: colors.red }]}>10 054 €</Text>
+            <Text style={[styles.cardDelta, { color: colors.red }]}>139 927 €</Text>
           </View>
           <View style={{ marginTop: 12 }}>
             <SpendingChart />
@@ -77,17 +77,17 @@ export default function AnalyticsScreen({ navigation }) {
         <View style={styles.twoUp}>
           <View style={styles.halfCard}>
             <Text style={styles.cardLabel}>Entrées d'argent</Text>
-            <Text style={styles.cardValueSm}>13 320 €</Text>
+            <Text style={styles.cardValueSm}>2 594 223 €</Text>
             <View style={styles.deltaRow}>
               <Ionicons name="caret-up" size={12} color={colors.green} />
-              <Text style={[styles.cardDeltaSm, { color: colors.green }]}>13 314 €</Text>
+              <Text style={[styles.cardDeltaSm, { color: colors.green }]}>2 594 217 €</Text>
             </View>
             <IncomeBars />
           </View>
 
           <View style={styles.halfCard}>
             <Text style={styles.cardLabel}>Opérations nettes</Text>
-            <Text style={styles.cardValueSm}>3 255 €</Text>
+            <Text style={styles.cardValueSm}>2 454 285 €</Text>
             <View style={styles.deltaRow}>
               <Ionicons name="add-circle" size={14} color={colors.green} />
               <Text style={[styles.cardDeltaSm, { color: colors.green }]}>Positif</Text>

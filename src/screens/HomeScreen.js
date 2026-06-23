@@ -2,7 +2,7 @@ import { View, StyleSheet, ScrollView, Pressable, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Text from '../components/AppText';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import WarmBackground from '../components/WarmBackground';
 import { colors, radius } from '../theme';
 import { accounts, user, learnMore, cards, watchlist, challenges } from '../data/accounts';
 import { transactions } from '../data/transactions';
@@ -54,24 +54,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <View pointerEvents="none" style={styles.bg}>
-        {/* faisceau chaud venant du coin haut-droit (lumière naturelle), le reste noir */}
-        <LinearGradient
-          colors={['rgba(228,214,188,0.55)', 'rgba(120,108,86,0.10)', 'transparent']}
-          locations={[0, 0.34, 0.66]}
-          start={{ x: 1, y: -0.05 }}
-          end={{ x: 0.12, y: 0.85 }}
-          style={StyleSheet.absoluteFill}
-        />
-        {/* prolongement chaud très doux sur le bord droit */}
-        <LinearGradient
-          colors={['transparent', 'rgba(205,188,156,0.15)', 'transparent']}
-          locations={[0, 0.5, 1]}
-          start={{ x: 0.96, y: 0.1 }}
-          end={{ x: 0.5, y: 0.72 }}
-          style={StyleSheet.absoluteFill}
-        />
-      </View>
+      <WarmBackground style={styles.bg} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
         {/* En-tête */}
@@ -140,19 +123,8 @@ export default function HomeScreen({ navigation }) {
               60 € à la clé par parrainage d'ici au 23 juin. Voir CG.
             </Text>
           </View>
-          <View style={styles.cardsArt}>
-            {/* Pochette du portefeuille (claire, comme la photo réelle) */}
-            <View style={[styles.walletSleeve, { transform: [{ rotate: '9deg' }] }]} />
-            {/* Carte Revolut qui dépasse, dégradé bleu→violet→rose→orange */}
-            <LinearGradient
-              colors={['#1F6FEB', '#7C4DFF', '#E0398A', '#F6A04D']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={[styles.walletCard, { transform: [{ rotate: '-7deg' }] }]}
-            >
-              <Text style={styles.walletBrand}>Revolut</Text>
-            </LinearGradient>
-          </View>
+          {/* Visuel : carte Revolut premium (métal), fournie détourée */}
+          <Image source={require('../../assets/carte-revolut-premium.png')} style={styles.promoImg} resizeMode="contain" />
         </View>
         <View style={styles.carouselDots}>
           {[0, 1, 2, 3, 4].map((i) => (
@@ -239,12 +211,12 @@ export default function HomeScreen({ navigation }) {
               <Text style={styles.spendLabel}>Dépenses du mois</Text>
               <Ionicons name="chevron-forward" size={15} color={colors.subtext} />
             </View>
-            <Text style={styles.spendAxis}>10,07k €</Text>
+            <Text style={styles.spendAxis}>140k €</Text>
           </View>
           <View style={styles.spendRow}>
-            <Text style={styles.spendValue}>10 065 €</Text>
+            <Text style={styles.spendValue}>139 938 €</Text>
             <Ionicons name="caret-up" size={13} color={colors.red} />
-            <Text style={styles.spendDelta}>10 054 €</Text>
+            <Text style={styles.spendDelta}>139 927 €</Text>
           </View>
           <View style={{ marginTop: 10 }}>
             <SpendingChart />
@@ -320,27 +292,24 @@ const styles = StyleSheet.create({
   searchBar: { flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: '#1C1C1EDD', borderRadius: radius.pill, paddingHorizontal: 14, height: 42, gap: 8 },
   searchText: { color: colors.subtext, fontSize: 15 },
   iconBtn: { width: 42, height: 42, borderRadius: 21, backgroundColor: '#1C1C1EDD', alignItems: 'center', justifyContent: 'center' },
-  balanceBlock: { alignItems: 'center', marginTop: 36 },
+  balanceBlock: { alignItems: 'center', marginTop: 84 },
   balanceLabel: { color: '#D5D5DA', fontSize: 15, fontWeight: '500' },
   // Même police que le montant "Patrimoine total" : Aeonik-Bold (graisse 800)
   balance: { color: colors.text, fontSize: 44, fontWeight: '800', marginTop: 8, letterSpacing: -1 },
   balanceCents: { fontSize: 28, fontWeight: '800' },
   ibanRow: { flexDirection: 'row', alignItems: 'center', gap: 7, marginTop: 8 },
   ibanText: { color: colors.subtext, fontSize: 15, letterSpacing: 0.2 },
-  accountPill: { backgroundColor: '#1C1C1EE6', borderRadius: radius.pill, paddingHorizontal: 18, paddingVertical: 10, marginTop: 22 },
+  accountPill: { backgroundColor: '#1C1C1EE6', borderRadius: radius.pill, paddingHorizontal: 18, paddingVertical: 10, marginTop: 64 },
   accountPillText: { color: colors.text, fontWeight: '600', fontSize: 15 },
   actions: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 26, paddingHorizontal: 6 },
   action: { alignItems: 'center', gap: 8, width: 84 },
-  actionCircle: { width: 62, height: 62, borderRadius: 31, backgroundColor: '#1C1C1ECC', alignItems: 'center', justifyContent: 'center' },
+  actionCircle: { width: 48, height: 48, borderRadius: 24, backgroundColor: colors.card, alignItems: 'center', justifyContent: 'center' },
   actionLabel: { fontSize: 12.5, color: colors.text, fontWeight: '500', textAlign: 'center', lineHeight: 16 },
   promo: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.card, marginHorizontal: 16, marginTop: 26, borderRadius: radius.lg, paddingVertical: 16, paddingHorizontal: 18, minHeight: 94, overflow: 'hidden' },
   promoClose: { position: 'absolute', top: 12, right: 12, zIndex: 2 },
   promoTitle: { color: '#FFFFFF', fontSize: 16, fontWeight: '700' },
   promoSub: { color: colors.subtext, fontSize: 13.5, marginTop: 6, lineHeight: 18 },
-  cardsArt: { width: 92, height: 72, justifyContent: 'center', alignItems: 'center' },
-  walletSleeve: { position: 'absolute', width: 58, height: 66, borderRadius: 9, backgroundColor: '#E7E4DD', right: 18, top: 4 },
-  walletCard: { position: 'absolute', width: 42, height: 62, borderRadius: 7, right: 30, top: -2, padding: 5, justifyContent: 'flex-end' },
-  walletBrand: { color: '#fff', fontSize: 8, fontWeight: '700' },
+  promoImg: { width: 100, height: 82 },
   carouselDots: { flexDirection: 'row', justifyContent: 'center', gap: 5, marginTop: 12 },
   cDot: { width: 5, height: 5, borderRadius: 3, backgroundColor: '#3A3A3E' },
   cDotActive: { backgroundColor: '#9A9AA0', width: 6, height: 6, borderRadius: 3 },
