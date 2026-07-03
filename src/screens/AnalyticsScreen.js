@@ -107,7 +107,7 @@ export default function AnalyticsScreen({ navigation }) {
 
         <View style={styles.card}>
           <Text style={styles.label}>Total des actifs</Text>
-          <Text style={styles.total}>4 150 €</Text>
+          <Text style={styles.total}>2 740 878 €</Text>
           <View style={styles.allocTrack}>
             <View style={styles.allocFill} />
           </View>

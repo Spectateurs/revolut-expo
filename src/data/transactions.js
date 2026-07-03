@@ -8,9 +8,10 @@
 export const transactions = [
   // ---- Aujourd'hui (2026-06-19) ----
   {
-    id: 't1', merchant: 'romain gonnet', category: 'transfers', amount: 2738873.0, currency: 'EUR',
+    id: 't1', merchant: 'FTMO TRADER GLOBAL', category: 'transfers', amount: 2738873.0, currency: 'EUR',
     date: '2026-06-19T20:15:00', type: 'transfer_in', method: 'Virement Revolut',
     account: 'Personnel · EUR', status: 'Reçu', location: 'Reçu sur Revolut', note: 'Virement reçu',
+    initials: 'F', avatarBg: '#3D7BFF',
   },
   {
     id: 't2', merchant: 'Etsy Ireland', category: 'shopping', amount: -16.0, currency: 'EUR',

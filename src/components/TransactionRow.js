@@ -19,14 +19,14 @@ function colorFor(name) {
 }
 
 // Avatar de contact : photo OU cercle coloré + initiales, + pastille flèche (envoyé/reçu)
-function ContactAvatar({ name, incoming, photo }) {
+function ContactAvatar({ name, incoming, photo, initials, bg }) {
   return (
     <View style={styles.avatarWrap}>
       {photo ? (
         <Image source={photo} style={styles.contactCircle} />
       ) : (
-        <View style={[styles.contactCircle, { backgroundColor: colorFor(name) }]}>
-          <Text style={styles.contactInitials}>{initialsOf(name)}</Text>
+        <View style={[styles.contactCircle, { backgroundColor: bg || colorFor(name) }]}>
+          <Text style={styles.contactInitials}>{initials || initialsOf(name)}</Text>
         </View>
       )}
       <View style={styles.badge}>
@@ -38,7 +38,7 @@ function ContactAvatar({ name, incoming, photo }) {
 
 function Leading({ tx }) {
   if (tx.type === 'transfer_in' || tx.type === 'transfer_out') {
-    return <ContactAvatar name={tx.merchant} incoming={tx.type === 'transfer_in'} photo={tx.photo} />;
+    return <ContactAvatar name={tx.merchant} incoming={tx.type === 'transfer_in'} photo={tx.photo} initials={tx.initials} bg={tx.avatarBg} />;
   }
   if (tx.photo) return <Image source={tx.photo} style={styles.logoImg} />;
   if (tx.brand && hasBrand(tx.brand)) return <MerchantLogo brand={tx.brand} size={46} />;
